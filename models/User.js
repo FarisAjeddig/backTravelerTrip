@@ -1,60 +1,6 @@
 const mongoose = require('mongoose');
-
-
-const AvailabilitySchema = new mongoose.Schema({
-  // Available from 6 AM to 8 aM
-  a6to8: {
-    type: Boolean,
-    default: false
-  },
-  // Available from 8 AM to 12 ...
-  a8to12: {
-    type: Boolean,
-    default: false
-  },
-  a12to14: {
-    type: Boolean,
-    default: false// const Availability = mongoose.model('Availability', AvailabilitySchema);
-  },
-  a14to18: {
-    type: Boolean,
-    default: false
-  },
-  a18to22: {
-    type: Boolean,
-    default: false
-  }
-});
-
-// const Availability = mongoose.model('Availability', AvailabilitySchema);
-
-const InterestSchema = new mongoose.Schema({
-  // Business
-  business: {
-    type: Boolean,
-    default: false
-  },
-  // Restaurants
-  restaurant: {
-    type: Boolean,
-    default: false
-  },
-  // Sports
-  sport: {
-    type: Boolean,
-    default: false
-  },
-  // Tourisme
-  tourism: {
-    type: Boolean,
-    default: false
-  },
-  // Autopartage
-  carsharing: {
-    type: Boolean,
-    default: false
-  }
-});
+const Availability = require('./Availability');
+const Interest = require('./Interest');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -83,14 +29,12 @@ const UserSchema = new mongoose.Schema({
     required: false
   },
   availability: {
-    type: AvailabilitySchema,
-    required: true,
-    default: AvailabilitySchema
+    type: String,
+    required: true
   },
   interests: {
-    type: InterestSchema,
-    required: true,
-    default: InterestSchema
+    type: String,
+    required: true
   }
 });
 

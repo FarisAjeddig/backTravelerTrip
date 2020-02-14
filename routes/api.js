@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const fetch = require('node-fetch');
 
-// User model
+// Models
 const User = require('../models/User');
-
+const Availability = require('../models/Availability');
+const Interest = require('../models/Interest');
 
 // Register Handle
 router.post('/register', (req, res) => {
@@ -45,28 +46,42 @@ router.post('/register', (req, res) => {
             statut: "ERROR"
           });
         } else {
-          const newUser = new User({
-            email,
-            password
-          });
 
-          // Hash Password
-          bcrypt.genSalt(10, (err, salt) =>
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if(err) throw err;
+          availability = new Availability();
+          interest = new Interest();
 
-              // Set password to hashed
-              newUser.password = hash;
-              // Save user
-              newUser.save()
-                .then(user => {
-                  res.json({
-                    message: 'Vous êtes enregistré et vous pouvez vous connecter!',
-                    statut: "SUCCESS"
+          availability.save()
+            .then(availability => {
+              interest.save()
+                .then(interest => {
+                  const newUser = new User({
+                    email,
+                    password,
+                    availability: availability._id,
+                    interests: interest._id
                   });
+
+                  // Hash Password
+                  bcrypt.genSalt(10, (err, salt) =>
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                      if(err) throw err;
+
+                      // Set password to hashed
+                      newUser.password = hash;
+                      // Save user
+                      newUser.save()
+                        .then(user => {
+                          res.json({
+                            message: 'Vous êtes enregistré et vous pouvez vous connecter!',
+                            statut: "SUCCESS"
+                          });
+                        })
+                        .catch(err => console.log(err));
+                  }))
                 })
                 .catch(err => console.log(err));
-          }))
+            })
+            .catch(err => console.log(err));
         }
       })
   }
@@ -129,22 +144,37 @@ router.post('/sign/facebook', (req, res) => {
       User.findOne({ email: json.email })
         .then(user => {
           if (!user){
-            const newUser = new User({
-              email: json.email,
-              password: "facebook",
-              picture: json.url,
-              name: json.name,
-              fbToken: token
-            });
-            // Save user
-            newUser.save()
-              .then(user => {})
-              .catch(err => console.log(err));
 
-            res.json({
-              statut: "SIGNUP",
-              user: newUser
-            });
+            availability = new Availability();
+            interest = new Interest();
+
+            availability.save()
+              .then(availability => {
+                interest.save()
+                  .then(interest => {
+
+                    const newUser = new User({
+                      email: json.email,
+                      password: "facebook",
+                      picture: json.url,
+                      name: json.name,
+                      fbToken: token,
+                      availability: availability._id,
+                      interests: interest._id
+                    });
+                    // Save user
+                    newUser.save()
+                      .then(user => {})
+                      .catch(err => console.log(err));
+
+                    res.json({
+                      statut: "SIGNUP",
+                      user: newUser
+                    });
+                  })
+                  .catch(err => console.log(err));
+              })
+              .catch(err => console.log(err));
           } else {
             // L'utilisateur est déjà inscrit, on renvoit les informations du profil.
             if (user.fbToken !== null){
@@ -170,5 +200,48 @@ router.post('/sign/facebook', (req, res) => {
       // res.json({json})
     });
 })
+
+// Availabilities and Interests handling
+router.post('/profile/availandinter', (req, res) => {
+  var { availabilities, interests, email } = req.body;
+
+  User.findOne({ email: email })
+    .then(user => {
+      if (!user){
+        // L'adresse mail n'est pas reconnue, peu probable
+        res.json({
+          statut: "NO_USER"
+        })
+      } else {
+        Availability.updateOne({_id: user.availability},
+        {
+          a6to8: availabilities.a6to8,
+          a8to12: availabilities.a8to12,
+          a12to14: availabilities.a12to14,
+          a14to18: availabilities.a14to18,
+          a18to22: availabilities.a18to22
+        })
+          .then(availability => {
+            Interest.updateOne({_id: user.interests},
+            {
+              business: interests.business,
+              restaurant: interests.restaurant,
+              sport: interests.sport,
+              tourism: interests.tourism,
+              carsharing: interests.carsharing
+            })
+              .then(interest => {
+                console.log(interest);
+                res.json({
+                  statut: "SUCCESS",
+                });
+              })
+              .catch(err => console.log(err))
+            })
+          .catch(err => console.log(err));
+
+        }
+      })
+    })
 
 module.exports = router;

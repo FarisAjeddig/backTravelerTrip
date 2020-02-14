@@ -5,6 +5,8 @@ const passport = require('passport');
 
 // User model
 const User = require('../models/User');
+const Availability = require('../models/Availability');
+const Interest = require('../models/Interest');
 
 // Login page
 router.get('/login', (req, res) => res.render('login'));
@@ -99,28 +101,41 @@ router.post('/register', (req, res) => {
             password2
           });
         } else {
-          const newUser = new User({
-            name,
-            email,
-            password
-          });
 
-          // Hash Password
-          bcrypt.genSalt(10, (err, salt) =>
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if(err) throw err;
+          availability = new Availability();
+          interest = new Interest();
 
-              // Set password to hashed
-              newUser.password = hash;
-              // Save user
-              newUser.save()
-                .then(user => {
-                  req.flash('success_msg', 'Vous êtes enregistré et vous pouvez vous connecter!');
-                  res.redirect('/users/login');
+          availability.save()
+            .then(availability => {
+              interest.save()
+                .then(interest => {
+                  const newUser = new User({
+                    name,
+                    email,
+                    password,
+                    availability: availability._id,
+                    interests: interest._id
+                  });
+
+                  // Hash Password
+                  bcrypt.genSalt(10, (err, salt) =>
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                      if(err) throw err;
+
+                      // Set password to hashed
+                      newUser.password = hash;
+                      // Save user
+                      newUser.save()
+                        .then(user => {
+                          req.flash('success_msg', 'Vous êtes enregistré et vous pouvez vous connecter!');
+                          res.redirect('/users/login');
+                        })
+                        .catch(err => console.log(err));
+                  }))
                 })
                 .catch(err => console.log(err));
-          }))
-
+            })
+            .catch(err => console.log(err));
         }
       })
   }
