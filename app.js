@@ -58,6 +58,7 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/api', require('./routes/api'));
+app.use('/api/geoloc', require('./routes/geoloc'));
 
 const PORT = process.env.PORT || 8000;
 

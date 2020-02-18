@@ -40,9 +40,8 @@ router.post('/register', (req, res) => {
     User.findOne({ email: email })
       .then(user => {
         if (user){
-          errors.push('L\'adresse mail est déjà utilisée...');
           res.json({
-            errors: errors,
+            message: 'L\'adresse mail est déjà utilisée... Essayez de vous connecter via Facebook',
             statut: "ERROR"
           });
         } else {
@@ -73,7 +72,8 @@ router.post('/register', (req, res) => {
                         .then(user => {
                           res.json({
                             message: 'Vous êtes enregistré et vous pouvez vous connecter!',
-                            statut: "SUCCESS"
+                            statut: "SUCCESS",
+                            user: newUser
                           });
                         })
                         .catch(err => console.log(err));
@@ -91,13 +91,11 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
 
   const {email, password} = req.body;
-  let errors = [];
 
   // Check errors
   if (!email || !password){
-    errors.push('Les deux champs sont obligatoires...');
     res.json({
-      errors: errors,
+      message: 'Les deux champs sont obligatoires...',
       statut: "ERROR"
     });
   } else {
@@ -105,9 +103,8 @@ router.post('/login', (req, res) => {
     User.findOne({ email: email })
       .then(user => {
         if (!user){
-          errors.push('L\'adresse mail n\'existe pas chez nous...');
           res.json({
-            errors: errors,
+            message: 'L\'adresse mail n\'existe pas chez nous...',
             statut: "ERROR"
           });
         } else {
@@ -118,12 +115,18 @@ router.post('/login', (req, res) => {
             if (isMatch){
               res.json({
                 message: 'Vous êtes désormais connecté!',
-                statut: "SUCCESS"
+                statut: "SUCCESS",
+                user: user
               });
             } else {
-              errors.push('Le mot de passe ne correspond pas à l\'adresse mail.');
+              let error = ''
+              if (user.fbToken == null){
+                error = 'Le mot de passe ne correspond pas à l\'adresse mail.';
+              } else {
+                error = 'Connectez vous via Facebook.';
+              }
               res.json({
-                errors: errors,
+                message: error,
                 statut: "ERROR"
               });
             }
@@ -213,33 +216,35 @@ router.post('/profile/availandinter', (req, res) => {
           statut: "NO_USER"
         })
       } else {
-        Availability.updateOne({_id: user.availability},
-        {
-          a6to8: availabilities.a6to8,
-          a8to12: availabilities.a8to12,
-          a12to14: availabilities.a12to14,
-          a14to18: availabilities.a14to18,
-          a18to22: availabilities.a18to22
-        })
-          .then(availability => {
-            Interest.updateOne({_id: user.interests},
+        User.updateOne({_id: user._id},
+        {firstlaunch: false})
+          .then(user => {
+            Availability.updateOne({_id: user.availability},
             {
-              business: interests.business,
-              restaurant: interests.restaurant,
-              sport: interests.sport,
-              tourism: interests.tourism,
-              carsharing: interests.carsharing
+              a6to8: availabilities.a6to8,
+              a8to12: availabilities.a8to12,
+              a12to14: availabilities.a12to14,
+              a14to18: availabilities.a14to18,
+              a18to22: availabilities.a18to22
             })
-              .then(interest => {
-                console.log(interest);
-                res.json({
-                  statut: "SUCCESS",
-                });
-              })
-              .catch(err => console.log(err))
-            })
-          .catch(err => console.log(err));
-
+              .then(availability => {
+                Interest.updateOne({_id: user.interests},
+                {
+                  business: interests.business,
+                  restaurant: interests.restaurant,
+                  sport: interests.sport,
+                  tourism: interests.tourism,
+                  carsharing: interests.carsharing
+                })
+                  .then(interest => {
+                      res.json({
+                        statut: "SUCCESS",
+                      });
+                  })
+                  .catch(err => console.log(err))
+                })
+              .catch(err => console.log(err));
+          })
         }
       })
     })
