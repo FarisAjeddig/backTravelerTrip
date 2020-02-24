@@ -1,3 +1,25 @@
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= user.name %> </p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<h1 class="mt-4">Tableau de bord</h1>
+<h4>Nombre d'utilisateurs : <%= users.length %></h4>
+<a href="/users/logout" class="btn btn-secondary">Déconnexion</a><br><br><br>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Poste & Entreprise</th>
+      <th scope="col">Email</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+<% users.forEach(function(user){ %>
+  <tr>
+    <th scope="row">#</th>
+    <td><%= user.name %></td>
+    <td><%= user.position %> chez <%= user.enterprise %></td>
+    <td><a href="mailto:<%= user.email %>"><%= user.email %></a></td>
+    <td><a href="delete/<%= user._id %>" class="btn btn-outline-danger">Supprimer</a></td>
+  </tr>
+<% }) %>
+  </tbody>
+</table>

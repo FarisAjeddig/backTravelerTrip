@@ -11,51 +11,6 @@ const Interest = require('../models/Interest');
 // Login page
 router.get('/login', (req, res) => res.render('login'));
 
-// Login Handle API WAY
-
-  // const {email, password} = req.body;
-  // let errors = [];
-  //
-  // // Check errors
-  // if (!email || !password){
-  //   errors.push({msg: 'Les deux champs sont obligatoires...'});
-  //   res.render('login', {
-  //     errors,
-  //     email,
-  //     password
-  //   });
-  // } else {
-  //   // Validation Passed
-  //   User.findOne({ email: email })
-  //     .then(user => {
-  //       if (!user){
-  //         errors.push({msg: 'L\'adresse mail n\'existe pas chez nous...'});
-  //         res.render('login', {
-  //           errors,
-  //           email,
-  //           password
-  //         });
-  //       } else {
-  //         // Check Hash Password : API Way
-  //         // bcrypt.compare(password, user.password, (err, isMatch) => {
-  //         //   if(err) throw err;
-  //         //
-  //         //   if (isMatch){
-  //         //     req.flash('success_msg', 'Vous êtes désormais connecté!');
-  //         //     res.redirect('/users/login');
-  //         //   } else {
-  //         //     errors.push({msg: 'Le mot de passe ne correspond pas à l\'adresse mail.'});
-  //         //     res.render('login', {
-  //         //       errors,
-  //         //       email,
-  //         //       password
-  //         //     });
-  //         //   }
-  //         // })
-  //       }
-  //     })
-  // }
-
 // Register page
 router.get('/register', (req, res) => res.render('register'));
 

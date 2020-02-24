@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
@@ -13,19 +13,26 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
+    "crypto-js": "^4.0.0",
     "ejs": "^3.0.1",
     "ejs-lint": "^1.0.1",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.0",
+    "logger": "0.0.1",
     "mongoose": "^5.9.1",
     "mongoose-double": "0.0.1",
     "mongoose-float": "^1.0.4",
     "mongoose-type-phone": "^1.0.1",
+    "multer": "^1.4.2",
     "node-fetch": "^2.6.0",
-    "nodemon": "^2.0.2",
+    "nodemailer": "^6.4.2",
+    "npm-logger": "^0.1.2",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

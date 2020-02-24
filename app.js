@@ -6,14 +6,16 @@ const session = require('express-session');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
 const bodyParser = require("body-parser");
+var path = require('path');
 
 const app = express();
 
-// Tutorial
+// Tutorial PassportJS
 // https://www.youtube.com/watch?v=6FOq4cUdH8k
 
 // Passport Config
 require('./config/passport')(passport);
+
 
 // DB Config
 const db = require('./config/keys').MongoURI;
@@ -59,6 +61,9 @@ app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/api', require('./routes/api'));
 app.use('/api/geoloc', require('./routes/geoloc'));
+
+app.use(express.static('uploads'));
+
 
 const PORT = process.env.PORT || 8000;
 
