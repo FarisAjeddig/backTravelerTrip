@@ -30,6 +30,18 @@ const InterestSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: false
+  },
+  // Shopping
+  shopping: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  // Spectacle
+  spectacle: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 

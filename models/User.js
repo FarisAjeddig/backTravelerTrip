@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   },
   enterprise: {
     type: String,
-    requred: false
+    required: false
   },
   position: { // Poste dans son entreprise
     type: String,

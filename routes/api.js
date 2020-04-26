@@ -40,11 +40,11 @@ const Interest = require('../models/Interest');
 // Register Handle
 router.post('/register', (req, res) => {
 
-  const {email, name, position, enterprise, password, password2} = req.body;
+  const {email, name, position, enterprise, phone, password, password2} = req.body;
   let errors = [];
 
   // Check required fields
-  if (!email || !password || !password2 || !name || !position || !enterprise){
+  if (!email || !password || !password2 || !phone || !name || !position || !enterprise){
     errors.push('Remplissez tous les champs...');
   }
 
@@ -243,45 +243,67 @@ router.post('/profile/availandinter', (req, res) => {
   var { availabilities, interests, email } = req.body;
 
   User.findOne({ email: email })
-    .then(user => {
-      if (!user){
-        // L'adresse mail n'est pas reconnue, peu probable
-        res.json({
-          statut: "NO_USER"
-        })
-      } else {
-        User.updateOne({_id: user._id},
-        {firstlaunch: false})
-          .then(result => {
-            Availability.updateOne({_id: user.availability},
-            {
-              a6to8: availabilities.a6to8,
-              a8to12: availabilities.a8to12,
-              a12to14: availabilities.a12to14,
-              a14to18: availabilities.a14to18,
-              a18to22: availabilities.a18to22
+  .then(user => {
+    if (!user){
+      // L'adresse mail n'est pas reconnue, peu probable
+      res.json({
+        statut: "NO_USER"
+      })
+    } else {
+      User.updateOne({_id: user._id}, {firstlaunch: false})
+      .then(result => {
+        Availability.updateOne({_id: user.availability},
+          {
+            a6to8: availabilities.a6to8,
+            a8to12: availabilities.a8to12,
+            a12to14: availabilities.a12to14,
+            a14to18: availabilities.a14to18,
+            a18to22: availabilities.a18to22
+          })
+          .then(availability => {
+            Interest.updateOne({_id: user.interests},
+              {
+                business: interests.business,
+                restaurant: interests.restaurant,
+                sport: interests.sport,
+                tourism: interests.tourism,
+                carsharing: interests.carsharing,
+                spectacle: interests.spectacle,
+                shopping: interests.shopping
+              })
+              .then(interest => {
+                res.json({
+                  statut: "SUCCESS",
+                });
+              })
+              .catch(err => console.log(err))
             })
-              .then(availability => {
-                Interest.updateOne({_id: user.interests},
-                {
-                  business: interests.business,
-                  restaurant: interests.restaurant,
-                  sport: interests.sport,
-                  tourism: interests.tourism,
-                  carsharing: interests.carsharing
-                })
-                  .then(interest => {
-                      res.json({
-                        statut: "SUCCESS",
-                      });
-                  })
-                  .catch(err => console.log(err))
-                })
-              .catch(err => console.log(err));
+            .catch(err => console.log(err));
           })
         }
-      })
     })
+})
+
+// Update position, enterprise & phone when connect with facebook
+router.post('/update/facebook', (req, res) => {
+
+  const {email, position, enterprise, phone} = req.body;
+
+  User.findOne({ email: email })
+    .then(user => {
+      User.updateOne({_id: user._id}, {firstlaunch: false, position, enterprise, phoneNumber: phone})
+      .then(result => {
+        console.log(result);
+        res.json({
+          statut: "SUCCESS",
+          user: user
+        })
+      })
+      })
+    .catch(err => console.log(err));
+
+})
+
 
 router.post('/upload', upload.single('file'), (req, res,next) => {
   console.log("UPLOAD");

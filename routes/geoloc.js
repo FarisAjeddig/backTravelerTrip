@@ -155,5 +155,42 @@ router.get('/users/:longitude/:latitude/:email', (req, res) => {
   //   })
 })
 
+router.get('/common/:userId1/:email2', (req, res) => {
+	var userId1 = req.params.userId1;
+	var email2 = req.params.email2;
+
+	User.findOne({ _id: userId1 })
+	.then(user1 => {
+		User.findOne({ email: email2 })
+		.then(user2 => {
+			if (user1.email === user2.email || distance(user1.lastLat, user1.lastLong, user2.lastLat, user2.lastLong, 'K') > 20){
+				res.json({
+					common: "false"
+				});
+			}
+			Availability.findOne({_id: user1.availability})
+      .then(avail1 => {
+        Interest.findOne({_id: user1.interests})
+          .then(inter2 => {
+					Availability.findOne({_id: user2.availability})
+          .then(avail2 => {
+            Interest.findOne({_id: user2.interests})
+            .then(inter1 => {
+              if (commonInterest(inter1, inter2) && commonAvailability(avail1, avail2)){
+								res.json({
+			            common: "true"
+			          });
+							} else {
+								res.json({
+									common: "false"
+								})
+							}
+						})
+					})
+				})
+			})
+		})
+	})
+})
 
 module.exports = router;
