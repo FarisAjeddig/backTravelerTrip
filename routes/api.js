@@ -171,13 +171,15 @@ router.post('/login', (req, res) => {
 // Facebook Login / Register Handle
 router.post('/sign/facebook', (req, res) => {
   const { token } = req.body;
-
+  console.log("TOKEN");
+  console.log(token);
   fetch(`https://graph.facebook.com/me?access_token=${token}&fields=email,name,about,picture`)
     .then(res => res.json())
     .then(json => {
-      console.log(json);
       User.findOne({ email: json.email })
         .then(user => {
+          console.log("IS USER EXISTING");
+          console.log(!user);
           if (!user){
 
             availability = new Availability();
@@ -201,18 +203,20 @@ router.post('/sign/facebook', (req, res) => {
                     });
                     // Save user
                     newUser.save()
-                      .then(user => {})
+                      .then(user => {
+                        console.log("NEWUSER SAVED");
+                        res.json({
+                          statut: "SIGNUP",
+                          user: user
+                        });
+                      })
                       .catch(err => console.log(err));
-
-                    res.json({
-                      statut: "SIGNUP",
-                      user: newUser
-                    });
                   })
                   .catch(err => console.log(err));
               })
               .catch(err => console.log(err));
           } else {
+            console.log(user);
             // L'utilisateur est déjà inscrit, on renvoit les informations du profil.
             if (user.fbToken !== null){
               User.updateOne({_id: user._id},
@@ -382,6 +386,20 @@ router.get('/interests/:id', (req, res) => {
       res.json({
         statut: "SUCCESS",
         interests: interests
+      });
+    })
+    .catch(err => console.log(err))
+})
+
+// Get profile by ID
+router.get('/profile/:id', (req, res) => {
+  var id = req.params.id;
+
+  User.findOne({_id: id})
+    .then(user => {
+      res.json({
+        statut: "SUCCESS",
+        user: user
       });
     })
     .catch(err => console.log(err))

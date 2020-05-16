@@ -72,6 +72,8 @@ router.post('/position', (req, res) => {
 
   User.findOne({ email: email })
     .then(user => {
+			console.log(email);
+			console.log(user);
       console.log(coords.longitude.toString());
       console.log(coords.longitude);
       User.updateOne({_id: user._id}, { lastLong: coords.longitude.toString(), lastLat: coords.latitude.toString(), lastLocationTime: Date.now()})
@@ -164,7 +166,7 @@ router.get('/common/:userId1/:email2', (req, res) => {
 		User.findOne({ email: email2 })
 		.then(user2 => {
 			if (user1.email === user2.email || distance(user1.lastLat, user1.lastLong, user2.lastLat, user2.lastLong, 'K') > 20){
-				res.json({
+				return res.json({
 					common: "false"
 				});
 			}
