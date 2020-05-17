@@ -60,7 +60,7 @@ router.post('/register', (req, res) => {
 
   if (errors.length > 0){
     res.json({
-      errors: errors,
+      errors: errors[0],
       statut: "ERROR"
     });
   } else {
