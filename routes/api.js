@@ -69,7 +69,7 @@ router.post('/register', (req, res) => {
       .then(user => {
         if (user){
           res.json({
-            message: 'L\'adresse mail est déjà utilisée... Essayez de vous connecter via Facebook',
+            errors: 'L\'adresse mail est déjà utilisée... Essayez de vous connecter via Facebook',
             statut: "ERROR"
           });
         } else {
