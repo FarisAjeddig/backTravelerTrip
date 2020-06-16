@@ -405,4 +405,42 @@ router.get('/profile/:id', (req, res) => {
     .catch(err => console.log(err))
 })
 
+// Edit authorization for printing email
+router.post('/edit/profile/authorization/email', (req, res) => {
+  var { id, isAuthorized } = req.body;
+
+  User.findOne({_id: id})
+    .then(user => {
+      User.updateOne({_id: id},
+      {authorizationForPrintingEmail: isAuthorized})
+        .then(user => {
+          res.json({
+            statut: "SUCCESS",
+            isAuthorized: isAuthorized
+          });
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+})
+
+// Edit authorization for printing phone number
+router.post('/edit/profile/authorization/phone', (req, res) => {
+  var { id, isAuthorized } = req.body;
+
+  User.findOne({_id: id})
+    .then(user => {
+      User.updateOne({_id: id},
+      {authorizationForPrintingPhone: isAuthorized})
+        .then(user => {
+          res.json({
+            statut: "SUCCESS",
+            isAuthorized: isAuthorized
+          });
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+})
+
 module.exports = router;

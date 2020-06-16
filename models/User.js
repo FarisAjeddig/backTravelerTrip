@@ -68,6 +68,16 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     required: true,
     default: Date.now
+  },
+  authorizationForPrintingEmail: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  authorizationForPrintingPhone: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 
