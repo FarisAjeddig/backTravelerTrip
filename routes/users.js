@@ -21,17 +21,17 @@ router.post('/register', (req, res) => {
 
   // Check required fields
   if (!name || !email || !password || !password2){
-    errors.push({msg: 'Remplissez tous les champs...'});
+    errors.push({msg: 'Fill in all fields...'});
   }
 
   // Check password matchs
   if (password !== password2){
-    errors.push({msg: 'Les mots de passent ne sont pas les mêmes...'});
+    errors.push({msg: 'Passwords are not the same...'});
   }
 
   // Check password length
   if (password.length < 6){
-    errors.push({msg: 'Le mot de passe doit faire au moins 6 caractères...'});
+    errors.push({msg: 'Password must be at least 6 characters long...'});
   }
 
   if (errors.length > 0){
@@ -47,7 +47,7 @@ router.post('/register', (req, res) => {
     User.findOne({ email: email })
       .then(user => {
         if (user){
-          errors.push({msg: 'L\'adresse mail est déjà utilisée...'});
+          errors.push({msg: 'Email address is already in use...'});
           res.render('register', {
             errors,
             name,
@@ -82,7 +82,7 @@ router.post('/register', (req, res) => {
                       // Save user
                       newUser.save()
                         .then(user => {
-                          req.flash('success_msg', 'Vous êtes enregistré et vous pouvez vous connecter!');
+                          req.flash('success_msg', 'You are registered and can log in!');
                           res.redirect('/users/login');
                         })
                         .catch(err => console.log(err));

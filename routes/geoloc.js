@@ -61,6 +61,10 @@ function commonInterest(inter1, inter2){
     return true
   } else if (inter1.carsharing && inter2.carsharing) {
     return true
+  } else if (inter1.shopping && inter2.shopping) {
+    return true
+  } else if (inter1.spectacle && inter2.spectacle) {
+    return true
   } else {
     return false
   }

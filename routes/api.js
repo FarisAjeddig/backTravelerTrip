@@ -45,17 +45,17 @@ router.post('/register', (req, res) => {
 
   // Check required fields
   if (!email || !password || !password2 || !phone || !name || !position || !enterprise){
-    errors.push('Remplissez tous les champs...');
+    errors.push('Fill in all fields...');
   }
 
   // Check password matchs
   if (password !== password2){
-    errors.push('Les mots de passent ne sont pas les mêmes...');
+    errors.push('Passwords are not the same...');
   }
 
   // Check password length
   if (password.length < 6){
-    errors.push('Le mot de passe doit faire au moins 6 caractères...');
+    errors.push('Password must be at least 6 characters long...');
   }
 
   if (errors.length > 0){
@@ -69,7 +69,7 @@ router.post('/register', (req, res) => {
       .then(user => {
         if (user){
           res.json({
-            errors: 'L\'adresse mail est déjà utilisée... Essayez de vous connecter via Facebook',
+            errors: 'The email address is already used ... Try to connect via Facebook',
             statut: "ERROR"
           });
         } else {
@@ -87,6 +87,7 @@ router.post('/register', (req, res) => {
                     position,
                     enterprise,
                     password,
+                    phoneNumber: phone,
                     availability: availability._id,
                     interests: interest._id
                   });
@@ -102,7 +103,7 @@ router.post('/register', (req, res) => {
                       newUser.save()
                         .then(user => {
                           res.json({
-                            message: 'Vous êtes enregistré et vous pouvez vous connecter!',
+                            message: 'You are registered and can log in!',
                             statut: "SUCCESS",
                             user: newUser
                           });
@@ -126,7 +127,7 @@ router.post('/login', (req, res) => {
   // Check errors
   if (!email || !password){
     res.json({
-      message: 'Les deux champs sont obligatoires...',
+      message: 'Both fields are required...',
       statut: "ERROR"
     });
   } else {
@@ -135,7 +136,7 @@ router.post('/login', (req, res) => {
       .then(user => {
         if (!user){
           res.json({
-            message: 'L\'adresse mail n\'existe pas chez nous...',
+            message: 'The email address does not exist with us...',
             statut: "ERROR"
           });
         } else {
@@ -145,16 +146,16 @@ router.post('/login', (req, res) => {
 
             if (isMatch){
               res.json({
-                message: 'Vous êtes désormais connecté!',
+                message: 'You are now connected!',
                 statut: "SUCCESS",
                 user: user
               });
             } else {
               let error = ''
               if (user.fbToken == null){
-                error = 'Le mot de passe ne correspond pas à l\'adresse mail.';
+                error = 'Password does not match email address.';
               } else {
-                error = 'Connectez vous via Facebook.';
+                error = 'Connect via Facebook.';
               }
               res.json({
                 message: error,
@@ -178,10 +179,7 @@ router.post('/sign/facebook', (req, res) => {
     .then(json => {
       User.findOne({ email: json.email })
         .then(user => {
-          console.log("IS USER EXISTING");
-          console.log(!user);
           if (!user){
-
             availability = new Availability();
             interest = new Interest();
 
@@ -189,8 +187,6 @@ router.post('/sign/facebook', (req, res) => {
               .then(availability => {
                 interest.save()
                   .then(interest => {
-
-                    console.log(json);
 
                     const newUser = new User({
                       email: json.email,
@@ -204,7 +200,6 @@ router.post('/sign/facebook', (req, res) => {
                     // Save user
                     newUser.save()
                       .then(user => {
-                        console.log("NEWUSER SAVED");
                         res.json({
                           statut: "SIGNUP",
                           user: user
@@ -345,7 +340,7 @@ router.post('/contact', (req, res) => {
     .then(user => {
       var mailOptions = {
         from: 'digibinks@gmail.com',
-        to: 'fajeddig@hotmail.fr',
+        to: 'alex76_1999@yahoo.fr',
         subject: 'Message reçu depuis l\'application mobile',
         text: "L'utilisateur " + user.name  + " (email : " + user.email +") t'a envoyé le message suivant sur l'application mobile : \n\n "+ message
       };
