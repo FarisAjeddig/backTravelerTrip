@@ -519,6 +519,11 @@ cryptiles@^4.1.2:
   dependencies:
     boom "7.x.x"
 
+crypto-js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.0.0.tgz#2904ab2677a9d042856a2ea2ef80de92e4a36dcc"
+  integrity sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==
+
 crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
@@ -988,9 +993,9 @@ get-stream@^3.0.0:
   integrity sha1-jpQ9E1jcN1VQVOy+LtsFqhdO3hQ=
 
 glob-parent@^5.1.0, glob-parent@~5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.0.tgz#5f4c1d1e748d30cd73ad2944b3577a81b081e8c2"
-  integrity sha512-qjtRgnIVmOfnKUE3NJAQEdk+lKrxfw8t5ke7SXtfMTHcjsBfOfWXCQfdb30zfDoZQ2IRSIiidmjtbHZPZ++Ihw==
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
+  integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
   dependencies:
     is-glob "^4.0.1"
 
@@ -1576,6 +1581,11 @@ node-fetch@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+
+nodemailer@^6.4.2:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.6.1.tgz#2a05fbf205b897d71bf43884167b5d4d3bd01b99"
+  integrity sha512-1xzFN3gqv+/qJ6YRyxBxfTYstLNt0FCtZaFRvf4Sg9wxNGWbwFmGXVpfSi6ThGK6aRxAo+KjHtYSW8NvCsNSAg==
 
 nodemon@^2.0.2:
   version "2.0.2"
